@@ -17,6 +17,8 @@ document.querySelector("button.check").addEventListener("click", function () {
   if (guess === myNumber) {
     document.querySelector("#alert").textContent = "🎊 🎉 Congratulations!!!";
     document.querySelector("#result").textContent = myNumber;
+
+    changeStyleForWinner();
     return;
   }
 
@@ -31,3 +33,8 @@ document.querySelector("button.check").addEventListener("click", function () {
     document.querySelector("#alert").textContent = "Sorry, the game is over 🙁";
   }
 });
+
+function changeStyleForWinner() {
+  document.querySelector("body").style.backgroundColor = "#60b347";
+  document.querySelector("#result").style.width = "30rem";
+}
