@@ -1,3 +1,3 @@
 "use strict";
 
-console.log(document.querySelector("#title").textContent);
+console.log(document.querySelector("head title"));
