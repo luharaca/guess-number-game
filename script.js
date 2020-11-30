@@ -4,9 +4,6 @@ let myNumber = generateNumber();
 let isGameOver = false;
 let highscore = 0;
 
-// for debug use
-console.log(myNumber);
-
 // event listeners
 document
   .querySelector("button.check")
@@ -18,73 +15,82 @@ document.querySelector("button.again").addEventListener("click", restoreGame);
 function playCheckNumberGame() {
   const guess = Number(document.querySelector("input.guess").value);
 
-  let currentScore = Number(document.querySelector("span.score").textContent);
-
-  if (isGameOver) {
+  if (!guess) {
+    warnInvalidGuess();
     return;
   }
 
-  if (!guess) {
-    warnInvalidGuess();
-  } else if (guess === myNumber) {
-    displayWinner();
-    isGameOver = true;
-  } else if (currentScore > 0) {
-    continueGame(guess, currentScore);
-  } else {
-    stopGame();
+  if (!isGameOver) {
+    if (guess === myNumber) {
+      isGameOver = true;
+      displayWinner();
+      updateHighScore();
+      return;
+    }
+
+    let currentScore = getCurrentScore();
+    currentScore > 0 ? playGame(guess, currentScore) : stopGame();
   }
 }
 
 function warnInvalidGuess() {
-  document.querySelector("#alert").textContent = "⛔️  No number is entered!";
+  displayMessage("⛔️  No number is entered!");
 }
 
 function displayWinner() {
-  document.querySelector("#alert").textContent = "🎊 🎉 Congratulations!!!";
-  document.querySelector("#result").textContent = myNumber;
+  displayMessage("🎊 🎉 Congratulations!!!");
   document.querySelector("body").style.backgroundColor = "#60b347";
+  document.querySelector("#result").textContent = myNumber;
   document.querySelector("#result").style.width = "30rem";
 }
 
-function continueGame(guess, currentScore) {
-  document.querySelector(".score").textContent = --currentScore;
-  if (guess > myNumber) {
-    document.querySelector("#alert").textContent = "The number is too high!";
-  } else {
-    document.querySelector("#alert").textContent = "The number is too low!";
+function updateHighScore() {
+  const currentScore = getCurrentScore();
+  if (currentScore > highscore) {
+    highscore = currentScore;
+    document.querySelector("span.highscore").textContent = highscore;
   }
 }
 
+function playGame(guess, currentScore) {
+  document.querySelector("span.score").textContent = --currentScore;
+  displayMessage(
+    guess > myNumber ? "The number is too high!" : "The number is too low!"
+  );
+}
+
 function stopGame() {
-  document.querySelector("#alert").textContent = "Sorry, the game is over 🙁";
+  displayMessage("Sorry, the game is over 🙁");
 }
 
 function restoreGame() {
+  isGameOver = false;
   myNumber = generateNumber();
 
-  updateHighScore();
-
-  document.querySelector("span.score").textContent = 20;
-  document.querySelector("#alert").textContent = "Start guessing...";
-  document.querySelector("input.guess").value = "";
-  document.querySelector("body").style.backgroundColor = "#222";
-  document.querySelector("#result").style.width = "15rem";
-  document.querySelector("#result").textContent = "?";
-  isGameOver = false;
-
-  // for debug use
-  console.log(myNumber);
+  restoreContent();
+  restoreStyle();
 }
 
 function generateNumber() {
   return Math.trunc(Math.random() * 20) + 1;
 }
 
-function updateHighScore() {
-  const currentScore = Number(document.querySelector("span.score").textContent);
-  if (currentScore > highscore) {
-    highscore = currentScore;
-    document.querySelector("span.highscore").textContent = highscore;
-  }
+function restoreContent() {
+  displayMessage("Start guessing...");
+  document.querySelector("input.guess").value = "";
+  document.querySelector("span.score").textContent = 20;
+  document.querySelector("#result").textContent = "?";
+}
+
+function restoreStyle() {
+  document.querySelector("body").style.backgroundColor = "#222";
+  document.querySelector("#result").style.width = "15rem";
+}
+
+function displayMessage(message) {
+  document.querySelector("#alert").textContent = message;
+}
+
+function getCurrentScore() {
+  return Number(document.querySelector("span.score").textContent);
 }
