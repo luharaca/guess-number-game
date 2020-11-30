@@ -1,6 +1,8 @@
 "use strict";
 
 let myNumber = generateNumber();
+let isGameOver = false;
+let highscore = 0;
 
 // for debug use
 console.log(myNumber);
@@ -15,14 +17,18 @@ document.querySelector("button.again").addEventListener("click", restoreGame);
 // funcitons
 function playCheckNumberGame() {
   const guess = Number(document.querySelector("input.guess").value);
-  let currentScore = Number(
-    document.querySelector("span.highscore").textContent
-  );
+
+  let currentScore = Number(document.querySelector("span.score").textContent);
+
+  if (isGameOver) {
+    return;
+  }
 
   if (!guess) {
     warnInvalidGuess();
   } else if (guess === myNumber) {
     displayWinner();
+    isGameOver = true;
   } else if (currentScore > 0) {
     continueGame(guess, currentScore);
   } else {
@@ -42,7 +48,7 @@ function displayWinner() {
 }
 
 function continueGame(guess, currentScore) {
-  document.querySelector(".highscore").textContent = --currentScore;
+  document.querySelector(".score").textContent = --currentScore;
   if (guess > myNumber) {
     document.querySelector("#alert").textContent = "The number is too high!";
   } else {
@@ -56,12 +62,16 @@ function stopGame() {
 
 function restoreGame() {
   myNumber = generateNumber();
-  document.querySelector("span.highscore").textContent = 20;
+
+  updateHighScore();
+
+  document.querySelector("span.score").textContent = 20;
   document.querySelector("#alert").textContent = "Start guessing...";
   document.querySelector("input.guess").value = "";
   document.querySelector("body").style.backgroundColor = "#222";
   document.querySelector("#result").style.width = "15rem";
   document.querySelector("#result").textContent = "?";
+  isGameOver = false;
 
   // for debug use
   console.log(myNumber);
@@ -69,4 +79,12 @@ function restoreGame() {
 
 function generateNumber() {
   return Math.trunc(Math.random() * 20) + 1;
+}
+
+function updateHighScore() {
+  const currentScore = Number(document.querySelector("span.score").textContent);
+  if (currentScore > highscore) {
+    highscore = currentScore;
+    document.querySelector("span.highscore").textContent = highscore;
+  }
 }
