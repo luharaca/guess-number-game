@@ -60,6 +60,7 @@ function playGame(guess, currentScore) {
 }
 
 function stopGame() {
+  isGameOver = true;
   displayMessage("Sorry, the game is over 🙁");
 }
 
