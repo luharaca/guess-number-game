@@ -4,8 +4,27 @@ const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
 const btnCloseModal = document.querySelector(".close-modal");
 const btnsOpenModal = document.querySelectorAll(".show-modal");
-console.log(btnsOpenModal);
 
+/**
+ *  define event listeners
+ * */
 for (let i = 0; i < btnsOpenModal.length; i++) {
-  console.log(btnsOpenModal[i].textContent);
+  btnsOpenModal[i].addEventListener("click", showModal);
+}
+
+btnCloseModal.addEventListener("click", closeWindow);
+overlay.addEventListener("click", closeWindow);
+
+/**
+ *  functions
+ * */
+function showModal() {
+  console.log("button clicked");
+  modal.classList.remove("hidden");
+  overlay.classList.remove("hidden");
+}
+
+function closeWindow() {
+  modal.classList.add("hidden");
+  overlay.classList.add("hidden");
 }
