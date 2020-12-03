@@ -27,7 +27,6 @@ document.addEventListener("keydown", function (keyEvent) {
  *  functions
  * */
 function showModal() {
-  console.log("button clicked");
   modal.classList.remove("hidden");
   overlay.classList.remove("hidden");
 }
