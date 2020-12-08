@@ -6,13 +6,19 @@
  * 2. Hold: Add the current number to the player's record and stop the current round
  * 3. Winning: the player who first gets a score of 100
  */
+
 // Selecting elements
-const scoreOfPlay1Element = document.getElementById("score--1");
-const scoreOfPlay2Element = document.querySelector("#score--2");
-const diceElement = document.getElementById("dice");
 const rollButton = document.getElementById("rollButton");
 const newGameButton = document.getElementById("newButton");
 const holdButton = document.getElementById("holdButton");
+
+const diceElement = document.getElementById("dice");
+
+const playerElements = document.querySelectorAll("section.player");
+const currentScoreList = document.querySelectorAll(
+  "section div.current p.current-score"
+);
+const totalScoreList = document.querySelectorAll("section p.score");
 
 let gameOver = false;
 
@@ -51,6 +57,7 @@ function rollDice() {
 }
 
 function displayDice(diceNumber) {
+  // diceElement.src = `dice-${diceNumber}.png`;
   diceElement.setAttribute("src", `dice-${diceNumber}.png`);
   diceElement.classList.remove("hidden");
 }
@@ -59,7 +66,7 @@ function endCurrentRound() {
   // reset the current score
   document.querySelector(
     "section.player--active .current .current-score"
-  ).textContent = "0";
+  ).textContent = 0;
 
   switchActivePlayer();
 }
@@ -69,9 +76,7 @@ function addToCurrentScoreForPlayer(diceNumber) {
     "section.player--active div.current p.current-score"
   );
 
-  currentElement.textContent = `${
-    Number(currentElement.textContent) + diceNumber
-  }`;
+  currentElement.textContent = Number(currentElement.textContent) + diceNumber;
 
   if (checkHasWon()) {
     displayWinner();
@@ -105,9 +110,8 @@ function checkHasWon() {
 }
 
 function setInitialConditions() {
-  scoreOfPlay1Element.textContent = 0; // 0 is converted to string automatically
-  scoreOfPlay2Element.textContent = 0;
-  resetCurrentScores();
+  resetScores(currentScoreList);
+  resetScores(totalScoreList);
   diceElement.classList.add("hidden");
   document
     .querySelector("section.player--active")
@@ -116,35 +120,16 @@ function setInitialConditions() {
 }
 
 function switchActivePlayer() {
-  const playerElement = document.querySelector(".player--active");
-  if (playerElement !== null) {
-    if ("player1" === playerElement.getAttribute("id")) {
-      playerElement.classList.remove("player--active");
-      const otherPlayerElement = document.getElementById("player2");
-      if (otherPlayerElement !== null) {
-        otherPlayerElement.classList.add("player--active");
-      }
-      return;
-    }
-
-    if ("player2" === playerElement.getAttribute("id")) {
-      playerElement.classList.remove("player--active");
-      const otherPlayerElement = document.getElementById("player1");
-      if (otherPlayerElement !== null) {
-        otherPlayerElement.classList.add("player--active");
-      }
-      return;
+  if (playerElements != null) {
+    for (let i = 0; i < playerElements.length; i++) {
+      playerElements[i].classList.toggle("player--active");
     }
   }
 }
 
-function resetCurrentScores() {
-  const scoreList = document.querySelectorAll(
-    "section div.current p.current-score"
-  );
-
-  for (let i = 0; i < scoreList.length; i++) {
-    scoreList[i].textContent = 0;
+function resetScores(scores) {
+  for (let i = 0; i < scores.length; i++) {
+    scores[i].textContent = 0;
   }
 }
 
