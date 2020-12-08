@@ -1,5 +1,11 @@
 "use strict";
 
+/**
+ * rules of the games
+ * 1. Roll dice: the number will be added on top of CURRENT except for number one where the current point is lost and the current round stops
+ * 2. Hold: Add the current number to the player's record and stop the current round
+ * 3. Winning: player who fist get socre 100
+ */
 // Selecting elements
 const scoreOfPlay1Element = document.getElementById("score--1");
 const scoreOfPlay2Element = document.querySelector("#score--2");
@@ -24,6 +30,11 @@ newButton.addEventListener("click", function () {
   setInitialConditions();
 });
 
+holdButton.addEventListener("click", function () {
+  addCurrentScoreToTotal();
+  switchActivePlayer();
+});
+
 // functions
 function playGame() {
   const diceNumber = Math.trunc(Math.random() * 6 + 1);
@@ -36,6 +47,20 @@ function playGame() {
   }
 
   updateSocreForCurrentPlayer(diceNumber);
+}
+
+function addCurrentScoreToTotal() {
+  const scoreElement = document.querySelector("section.player--active .score");
+  const currentElement = document.querySelector(
+    "section.player--active .current .current-score"
+  );
+
+  scoreElement.textContent = `${
+    Number(currentElement.textContent) + Number(scoreElement.textContent)
+  }`;
+
+  // reset current
+  currentElement.textContent = "0";
 }
 
 function displayDice(diceNumber) {
