@@ -4,14 +4,14 @@
  * rules of the games
  * 1. Roll dice: the number will be added on top of CURRENT except for number one where the current point is lost and the current round stops
  * 2. Hold: Add the current number to the player's record and stop the current round
- * 3. Winning: player who fist get socre 100
+ * 3. Winning: player who fist get score 100
  */
 // Selecting elements
 const scoreOfPlay1Element = document.getElementById("score--1");
 const scoreOfPlay2Element = document.querySelector("#score--2");
 const diceElement = document.getElementById("dice");
 const rollButton = document.getElementById("rollButton");
-const newButton = document.getElementById("newButton");
+const newGameButton = document.getElementById("newButton");
 const holdButton = document.getElementById("holdButton");
 
 let gameOver = false;
@@ -22,45 +22,32 @@ setInitialConditions();
 // events
 rollButton.addEventListener("click", function () {
   if (!gameOver) {
-    playGame();
+    rollDice();
   }
 });
 
-newButton.addEventListener("click", function () {
+newGameButton.addEventListener("click", function () {
   setInitialConditions();
 });
 
 holdButton.addEventListener("click", function () {
-  addCurrentScoreToTotal();
-  switchActivePlayer();
+  if (!gameOver) {
+    addCurrentScoreToTotal();
+  }
 });
 
 // functions
-function playGame() {
+function rollDice() {
   const diceNumber = Math.trunc(Math.random() * 6 + 1);
 
   displayDice(diceNumber);
 
   if (diceNumber === 1) {
-    switchActivePlayer();
+    endCurrentRound();
     return;
   }
 
-  updateSocreForCurrentPlayer(diceNumber);
-}
-
-function addCurrentScoreToTotal() {
-  const scoreElement = document.querySelector("section.player--active .score");
-  const currentElement = document.querySelector(
-    "section.player--active .current .current-score"
-  );
-
-  scoreElement.textContent = `${
-    Number(currentElement.textContent) + Number(scoreElement.textContent)
-  }`;
-
-  // reset current
-  currentElement.textContent = "0";
+  addToCurrentScoreForPlayer(diceNumber);
 }
 
 function displayDice(diceNumber) {
@@ -68,30 +55,64 @@ function displayDice(diceNumber) {
   diceElement.classList.remove("hidden");
 }
 
+function endCurrentRound() {
+  // reset the current score
+  document.querySelector(
+    "section.player--active .current .current-score"
+  ).textContent = "0";
+
+  switchActivePlayer();
+}
+
+function addToCurrentScoreForPlayer(diceNumber) {
+  const currentElement = document.querySelector(
+    "section.player--active div.current p.current-score"
+  );
+
+  currentElement.textContent = `${
+    Number(currentElement.textContent) + diceNumber
+  }`;
+
+  if (checkHasWon()) {
+    displayWinner();
+  }
+}
+
+function addCurrentScoreToTotal() {
+  const scoreElement = document.querySelector("section.player--active .score");
+
+  scoreElement.textContent = `${
+    Number(
+      document.querySelector("section.player--active .current .current-score")
+        .textContent
+    ) + Number(scoreElement.textContent)
+  }`;
+
+  if (checkHasWon()) {
+    displayWinner();
+    return;
+  }
+
+  endCurrentRound();
+}
+
+function checkHasWon() {
+  return (
+    Number(
+      document.querySelector("section.player--active p.score").textContent
+    ) >= 100
+  );
+}
+
 function setInitialConditions() {
   scoreOfPlay1Element.textContent = 0; // 0 is converted to string automatically
   scoreOfPlay2Element.textContent = 0;
   resetCurrentScores();
   diceElement.classList.add("hidden");
+  document
+    .querySelector("section.player--active")
+    .classList.remove("player--winner");
   gameOver = false;
-}
-
-function updateSocreForCurrentPlayer(diceNumber) {
-  document.querySelector(
-    "section.player--active div.current p.current-score"
-  ).textContent = diceNumber;
-
-  let score = Number(
-    document.querySelector("section.player--active p.score").textContent
-  );
-  document.querySelector(
-    "section.player--active p.score"
-  ).textContent = score += diceNumber;
-
-  if (score >= 100) {
-    gameOver = true;
-    displayWinner();
-  }
 }
 
 function switchActivePlayer() {
@@ -128,8 +149,8 @@ function resetCurrentScores() {
 }
 
 function displayWinner() {
-  console.log(
-    "Winner is " +
-      document.querySelector("section.player--active h2.name").textContent
-  );
+  gameOver = true;
+  document
+    .querySelector("section.player--active")
+    .classList.add("player--winner");
 }
