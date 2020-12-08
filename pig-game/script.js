@@ -1,10 +1,10 @@
 "use strict";
 
 /**
- * rules of the games
- * 1. Roll dice: the number will be added on top of CURRENT except for number one where the current point is lost and the current round stops
+ * Rules of the games
+ * 1. Roll dice: it will add the number on top of CURRENT except for number one where the current point is lost and the current round stops
  * 2. Hold: Add the current number to the player's record and stop the current round
- * 3. Winning: player who fist get score 100
+ * 3. Winning: the player who first gets a score of 100
  */
 // Selecting elements
 const scoreOfPlay1Element = document.getElementById("score--1");
