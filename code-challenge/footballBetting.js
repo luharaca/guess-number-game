@@ -86,13 +86,8 @@ function printGoals(...players) {
   }
 }
 
-let oddAndTeamMap = new Map();
-oddAndTeamMap.set(team1, "team1");
-oddAndTeamMap.set(team2, "team2");
-oddAndTeamMap.set(draw, "draw");
-let keyArray = [team1, team2, draw];
-keyArray.sort();
-console.log(`The winning team is ${oddAndTeamMap.get(keyArray[0])}`);
+team1 < team2 && console.log(`The winning team is team1`);
+team1 > team2 && console.log(`The winning team is team2`);
 
 // Test function
 printGoals(...game.scored);
