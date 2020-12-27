@@ -132,3 +132,18 @@ function calculateAverageOdd() {
 }
 
 console.log(calculateAverageOdd());
+
+// 3
+function printOdds() {
+  const oddEntries = Object.entries(game.odds);
+
+  for (const [key, odd] of oddEntries) {
+    let printStr = "Odd of ";
+
+    printStr += key === "x" ? `draw: ${odd}` : `victory ${game[key]}: ${odd}`;
+
+    console.log(printStr);
+  }
+}
+
+printOdds();
