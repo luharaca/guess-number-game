@@ -257,8 +257,8 @@ document.querySelector("button").addEventListener("click", function () {
   const text = document.querySelector("textarea").value;
   const words = text.split("\n");
 
-  for (let i = 0; i < words.length; i++) {
-    const subWords = words[i].trim().split("_");
+  for (const [i, word] of words.entries()) {
+    const subWords = word.trim().split("_");
     let newWord = "";
     for (const subWord of subWords) {
       newWord += subWord[0].toUpperCase() + subWord.toLowerCase().slice(1);
