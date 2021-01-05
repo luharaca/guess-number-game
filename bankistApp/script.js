@@ -86,3 +86,32 @@ const displayMovements = function (movements) {
 };
 
 displayMovements(account1.movements);
+
+function createUsernames(accounts) {
+  accounts.forEach(account => {
+    account.username = account.owner
+      .toLowerCase()
+      .split(" ")
+      .map(name => name[0])
+      .join("");
+  });
+}
+
+function calculateAndDisplayBalance(movements) {
+  const balance = movements.reduce(
+    (accumulator, current) => accumulator + current
+  );
+  labelBalance.context = `${balance} EUR`;
+}
+
+// 123
+createUsernames(accounts);
+console.log(accounts);
+
+// map
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+const calculateMaximum = function (movements) {
+  return movements.reduce((max, current) => (max < current ? current : max));
+};
+console.log(calculateMaximum(movements));
