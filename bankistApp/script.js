@@ -127,3 +127,24 @@ function calculateAndDisplaySummary(account) {
 }
 
 calculateAndDisplaySummary(account1);
+
+// 123
+createUsernames(accounts);
+console.log(accounts);
+
+// map
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+const calculateMaximum = function (movements) {
+  return movements.reduce((max, current) => (max < current ? current : max));
+};
+console.log(calculateMaximum(movements));
+
+const eurToUSD = 1.1;
+// PIPELINE
+const totalDepositUSD = movements
+  .filter(mov => mov > 0)
+  .map(mov => mov * eurToUSD)
+  .reduce((sum, mov) => sum + mov);
+
+console.log(totalDepositUSD);
