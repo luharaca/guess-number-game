@@ -1,2 +1,2 @@
-# javascript-games
-This repository includes some little web games implemented by JavaScript, HTML, CSS. 
+# javascript-projects
+This repository includes projects implemented using JavaScript, HTML, CSS. 
