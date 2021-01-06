@@ -140,11 +140,4 @@ const calculateMaximum = function (movements) {
 };
 console.log(calculateMaximum(movements));
 
-const eurToUSD = 1.1;
-// PIPELINE
-const totalDepositUSD = movements
-  .filter(mov => mov > 0)
-  .map(mov => mov * eurToUSD)
-  .reduce((sum, mov) => sum + mov);
-
 console.log(totalDepositUSD);
