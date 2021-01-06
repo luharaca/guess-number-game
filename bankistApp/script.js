@@ -104,6 +104,30 @@ function calculateAndDisplayBalance(movements) {
   labelBalance.context = `${balance} EUR`;
 }
 
+function calculateAndDisplaySummary(account) {
+  const movements = account.movements;
+  // calculate income
+  const totalIncome = movements
+    .filter(movement => movement > 0)
+    .reduce((sum, movement) => sum + movement);
+  labelSumIn.textContent = `${totalIncome} EUR`;
+
+  // calculate total expense
+  const totalExpense = movements
+    .filter(movement => movement < 0)
+    .reduce((sum, movement) => sum + movement);
+  labelSumOut.textContent = `${Math.abs(totalExpense)} EUR`;
+
+  // calculate interest
+  const totalInterest = movements
+    .filter(movement => movement > 0)
+    .map(movement => (movement * account.interestRate) / 100)
+    .reduce((sum, movement) => sum + movement);
+  labelSumInterest.textContent = `${totalInterest} EUR`;
+}
+
+calculateAndDisplaySummary(account1);
+
 // 123
 createUsernames(accounts);
 console.log(accounts);
@@ -115,3 +139,5 @@ const calculateMaximum = function (movements) {
   return movements.reduce((max, current) => (max < current ? current : max));
 };
 console.log(calculateMaximum(movements));
+
+console.log(totalDepositUSD);
