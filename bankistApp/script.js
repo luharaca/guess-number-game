@@ -86,3 +86,44 @@ const displayMovements = function (movements) {
 };
 
 displayMovements(account1.movements);
+
+function createUsernames(accounts) {
+  accounts.forEach(account => {
+    account.username = account.owner
+      .toLowerCase()
+      .split(" ")
+      .map(name => name[0])
+      .join("");
+  });
+}
+
+function calculateAndDisplayBalance(movements) {
+  const balance = movements.reduce(
+    (accumulator, current) => accumulator + current
+  );
+  labelBalance.context = `${balance} EUR`;
+}
+
+function calculateAndDisplaySummary(account) {
+  const movements = account.movements;
+  // calculate income
+  const totalIncome = movements
+    .filter(movement => movement > 0)
+    .reduce((sum, movement) => sum + movement);
+  labelSumIn.textContent = `${totalIncome} EUR`;
+
+  // calculate total expense
+  const totalExpense = movements
+    .filter(movement => movement < 0)
+    .reduce((sum, movement) => sum + movement);
+  labelSumOut.textContent = `${Math.abs(totalExpense)} EUR`;
+
+  // calculate interest
+  const totalInterest = movements
+    .filter(movement => movement > 0)
+    .map(movement => (movement * account.interestRate) / 100)
+    .reduce((sum, movement) => sum + movement);
+  labelSumInterest.textContent = `${totalInterest} EUR`;
+}
+
+calculateAndDisplaySummary(account1);
