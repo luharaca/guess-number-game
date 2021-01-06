@@ -66,10 +66,10 @@ const inputClosePin = document.querySelector(".form__input--pin");
 /////////////////////////////////////////////////
 // Functions
 
-const displayMovements = function (movements) {
+const displayMovements = function (account) {
   containerMovements.innerHTML = "";
 
-  movements.forEach(function (movement, i) {
+  account?.movements.forEach(function (movement, i) {
     const type = movement > 0 ? "deposit" : "withdrawal";
 
     const html = `
@@ -97,11 +97,12 @@ function createUsernames(accounts) {
 
 createUsernames(accounts);
 
-function calculateAndDisplayBalance(movements) {
-  const balance = movements.reduce(
+function calculateAndDisplayBalance(account) {
+  const balance = account.movements.reduce(
     (accumulator, current) => accumulator + current
   );
   labelBalance.textContent = `${balance} €`;
+  account.balance = balance;
 }
 
 function calculateAndDisplaySummary(account) {
@@ -141,13 +142,40 @@ btnLogin.addEventListener("click", function (event) {
 
   if (Number(inputLoginPin.value) === currentAccount?.pin) {
     labelWelcome.textContent = `Welcome back, ${
-      currentAccount.owner.split(" ")[0]
+      currentAccount?.owner.split(" ")[0]
     }`;
     containerApp.style.opacity = "1";
     inputLoginUsername.value = inputLoginPin.value = "";
+    inputLoginPin.blur();
 
-    displayMovements(currentAccount.movements);
-    calculateAndDisplayBalance(currentAccount.movements);
-    calculateAndDisplaySummary(currentAccount);
+    displayBankingDetails(currentAccount);
   }
 });
+
+btnTransfer.addEventListener("click", function (event) {
+  event.preventDefault();
+
+  const transferUsername = inputTransferTo.value;
+  const transferAccount = accounts.find(
+    account => account.username === transferUsername
+  );
+
+  if (transferAccount) {
+    const transferAmount = Number(inputTransferAmount.value);
+
+    if (transferAmount > 0 && transferAmount < currentAccount?.balance) {
+      currentAccount.movements.push(-1 * transferAmount);
+      transferAccount.movements.push(transferAmount);
+
+      displayBankingDetails(currentAccount);
+    }
+  }
+
+  inputTransferTo.value = inputTransferAmount.value = "";
+});
+
+function displayBankingDetails(currentAccount) {
+  displayMovements(currentAccount);
+  calculateAndDisplayBalance(currentAccount);
+  calculateAndDisplaySummary(currentAccount);
+}
