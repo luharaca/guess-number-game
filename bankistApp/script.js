@@ -85,8 +85,6 @@ const displayMovements = function (movements) {
   });
 };
 
-displayMovements(account1.movements);
-
 function createUsernames(accounts) {
   accounts.forEach(account => {
     account.username = account.owner
@@ -97,11 +95,13 @@ function createUsernames(accounts) {
   });
 }
 
+createUsernames(accounts);
+
 function calculateAndDisplayBalance(movements) {
   const balance = movements.reduce(
     (accumulator, current) => accumulator + current
   );
-  labelBalance.context = `${balance} EUR`;
+  labelBalance.textContent = `${balance} €`;
 }
 
 function calculateAndDisplaySummary(account) {
@@ -110,34 +110,44 @@ function calculateAndDisplaySummary(account) {
   const totalIncome = movements
     .filter(movement => movement > 0)
     .reduce((sum, movement) => sum + movement);
-  labelSumIn.textContent = `${totalIncome} EUR`;
+  labelSumIn.textContent = `${totalIncome} €`;
 
   // calculate total expense
   const totalExpense = movements
     .filter(movement => movement < 0)
     .reduce((sum, movement) => sum + movement);
-  labelSumOut.textContent = `${Math.abs(totalExpense)} EUR`;
+  labelSumOut.textContent = `${Math.abs(totalExpense)} €`;
 
   // calculate interest
   const totalInterest = movements
     .filter(movement => movement > 0)
     .map(movement => (movement * account.interestRate) / 100)
     .reduce((sum, movement) => sum + movement);
-  labelSumInterest.textContent = `${totalInterest} EUR`;
+  labelSumInterest.textContent = `${totalInterest} €`;
 }
 
-calculateAndDisplaySummary(account1);
+///////////////////////////////////////////////////
+// Event handlers
 
-// 123
-createUsernames(accounts);
-console.log(accounts);
+let currentAccount;
 
-// map
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+btnLogin.addEventListener("click", function (event) {
+  // prevent from submitting
+  event.preventDefault();
 
-const calculateMaximum = function (movements) {
-  return movements.reduce((max, current) => (max < current ? current : max));
-};
-console.log(calculateMaximum(movements));
+  currentAccount = accounts.find(
+    account => account.username === inputLoginUsername.value
+  );
 
-console.log(totalDepositUSD);
+  if (Number(inputLoginPin.value) === currentAccount?.pin) {
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(" ")[0]
+    }`;
+    containerApp.style.opacity = "1";
+    inputLoginUsername.value = inputLoginPin.value = "";
+
+    displayMovements(currentAccount.movements);
+    calculateAndDisplayBalance(currentAccount.movements);
+    calculateAndDisplaySummary(currentAccount);
+  }
+});
