@@ -174,6 +174,25 @@ btnTransfer.addEventListener("click", function (event) {
   inputTransferTo.value = inputTransferAmount.value = "";
 });
 
+btnClose.addEventListener("click", function (event) {
+  event.preventDefault();
+
+  if (
+    currentAccount?.username === inputCloseUsername.value &&
+    currentAccount?.pin === Number(inputClosePin.value)
+  ) {
+    const accountIndex = accounts.findIndex(
+      account => account.username === currentAccount.username
+    );
+    accounts.splice(accountIndex, 1);
+
+    labelWelcome.textContent = "Log in to get started";
+    containerApp.style.opacity = "0";
+  }
+
+  inputCloseUsername.value = inputClosePin.value = "";
+});
+
 function displayBankingDetails(currentAccount) {
   displayMovements(currentAccount);
   calculateAndDisplayBalance(currentAccount);
