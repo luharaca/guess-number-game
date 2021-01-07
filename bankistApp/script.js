@@ -66,10 +66,14 @@ const inputClosePin = document.querySelector(".form__input--pin");
 /////////////////////////////////////////////////
 // Functions
 
-const displayMovements = function (account) {
+const displayMovements = function (account, sort = false) {
   containerMovements.innerHTML = "";
 
-  account?.movements.forEach(function (movement, i) {
+  const movementsToDisplay = sort
+    ? account.movements.slice().sort((a, b) => a - b)
+    : account.movements;
+
+  movementsToDisplay.forEach(function (movement, i) {
     const type = movement > 0 ? "deposit" : "withdrawal";
 
     const html = `
@@ -131,6 +135,7 @@ function calculateAndDisplaySummary(account) {
 // Event handlers
 
 let currentAccount;
+let sort = true;
 
 btnLogin.addEventListener("click", function (event) {
   // prevent from submitting
@@ -207,6 +212,13 @@ btnLoan.addEventListener("click", function (event) {
   }
 
   inputLoanAmount.value = "";
+});
+
+btnSort.addEventListener("click", function (event) {
+  event.preventDefault();
+
+  displayMovements(currentAccount, sort);
+  sort = !sort;
 });
 
 function displayBankingDetails(currentAccount) {
