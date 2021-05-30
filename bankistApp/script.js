@@ -81,15 +81,29 @@ const inputClosePin = document.querySelector(".form__input--pin");
 /////////////////////////////////////////////////
 // Functions
 
+const padTime = date => {
+  return date.toString().padStart(2, 0);
+};
+
 const buildDate = dateString => {
   let date = new Date(Date.parse(dateString));
-  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+  return `${padTime(date.getMonth() + 1)}/${padTime(date.getDate())}/${padTime(
+    date.getFullYear()
+  )}`;
+};
+
+const formatMovementDate = function (dateString) {
+  let date = new Date(Date.parse(dateString));
+  return `${padTime(date.getMonth() + 1)}/${padTime(date.getDate())}/${padTime(
+    date.getFullYear()
+  )}`;
 };
 
 const buildDateTime = date => {
-  return `${buildDate(
-    date.toString()
-  )}, ${date.getHours()}:${date.getMinutes()}`;
+  return `${buildDate(date.toString())}, ${date
+    .getHours()
+    .toString()
+    .padStart(2, 0)}:${date.getMinutes().toString().padStart(2, 0)}`;
 };
 
 const displayMovements = function (acc, sort = false) {
@@ -107,7 +121,9 @@ const displayMovements = function (acc, sort = false) {
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-        <div class="movements__date">${buildDate(acc.movementsDates[i])}</div>
+        <div class="movements__date">${formatMovementDate(
+          acc.movementsDates[i]
+        )}</div>
         <div class="movements__value">${mov.toFixed(2)}€</div>
       </div>
     `;
